@@ -16,9 +16,7 @@
   <div id="welcome" class="welcome">
     <div class="welcome-content">
       <h1 class="title"><span class="title-cap"><svg class="title-dots" viewBox="0 0 64 14" aria-hidden="true" focusable="false"><circle cx="20" cy="10" r="3.5"/><circle cx="32" cy="7" r="5.5"/><circle cx="44" cy="10" r="3.5"/></svg>M</span>arquis</h1>
-      <p>Arrasta um ficheiro <code>.md</code> para aqui</p>
-      <p class="welcome-or">ou</p>
-      <button id="open-btn" class="open-btn">Abre um ficheiro</button>
+      <p class="welcome-prompt"><span class="only-pointer">Arrasta um ficheiro <code>.md</code> para aqui, ou </span><button type="button" id="open-btn" class="link-btn"><span class="only-pointer">abre um</span><span class="only-touch">Toca para abrir um ficheiro <code>.md</code></span></button><span class="only-pointer">.</span></p>
       <input type="file" id="file-input" accept=".md,.markdown,.txt" hidden>
       <p id="welcome-msg" class="welcome-msg" role="status" aria-live="polite"></p>
     </div>
