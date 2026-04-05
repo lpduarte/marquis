@@ -82,4 +82,4 @@ First public release. Live at [lpduarte.github.io/marquis](https://lpduarte.gith
 
 ---
 
-*v1 post-mortem lives on the developer's desktop (`marquis-v1-postmortem.md`), not in the repo. It documents the process, not the product.*
+*v1 post-mortem lives in [`POSTMORTEM.md`](./POSTMORTEM.md). It documents the process, not the product.*

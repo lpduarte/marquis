@@ -109,7 +109,7 @@ These were considered and rejected. Do not reopen without a compelling case.
 
 Before writing any code for v2:
 
-1. Read `marquis-v1-postmortem.md` (on the developer's desktop, not in the repo).
+1. Read [`POSTMORTEM.md`](./POSTMORTEM.md).
 2. Decide the v2 *question* — what problem is v2 solving that v1 did not? If there isn't a clear answer, there is no v2.
 3. Update this file with a new `## v2` section mirroring the structure above: core, identity, infrastructure, accessibility, stack. List what v2 adds and what v2 *removes* from v1 (if anything).
 4. Update `CHANGELOG.md` with a new entry.
