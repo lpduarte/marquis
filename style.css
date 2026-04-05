@@ -167,6 +167,8 @@ body {
 @media (hover: none) and (pointer: coarse) {
   .only-pointer { display: none; }
   .only-touch { display: inline; }
+  .link-btn { text-decoration: none; }
+  .welcome { cursor: pointer; }
 }
 
 .welcome-msg {

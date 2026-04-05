@@ -104,6 +104,16 @@
     fileInput.click();
   });
 
+  // On touch devices the whole welcome is the hit target — tapping anywhere
+  // opens the picker. We skip taps that already land on the button so the
+  // native button handler fires exactly once.
+  const touchQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
+  welcome.addEventListener('click', function (e) {
+    if (!touchQuery.matches) return;
+    if (e.target.closest('#open-btn')) return;
+    fileInput.click();
+  });
+
   fileInput.addEventListener('change', function () {
     if (fileInput.files.length > 0) {
       readFile(fileInput.files[0]);
