@@ -1,10 +1,13 @@
-const CACHE = 'marquis-v1';
+const CACHE = 'marquis-v2';
 const ASSETS = [
   './',
   './index.html',
   './app.js',
   './style.css',
   './favicon.svg',
+  './favicon-light.png',
+  './favicon-dark.png',
+  './apple-touch-icon.png',
   './manifest.json',
   'https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,600;0,700;1,400&display=swap',
   'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js',
