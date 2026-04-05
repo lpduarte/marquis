@@ -225,6 +225,14 @@ body {
   overflow-wrap: break-word;
 }
 
+/* The article receives focus programmatically on render so screen
+   readers start inside the new content. It is not reachable via
+   keyboard Tab (tabindex="-1"), so the visible focus ring is pure
+   noise — especially on iOS where it paints a blue system accent. */
+.content:focus {
+  outline: none;
+}
+
 .content h1, .content h2, .content h3,
 .content h4, .content h5, .content h6 {
   font-weight: 600;
