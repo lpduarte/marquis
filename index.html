@@ -29,14 +29,14 @@
 
   <!-- Reading view -->
   <div id="reader" class="reader hidden">
-    <article id="content" class="content"></article>
+    <article id="content" class="content" tabindex="-1"></article>
   </div>
 
   <!-- Floating controls (hidden until tap/click) -->
-  <div id="controls" class="controls">
+  <div id="controls" class="controls" inert>
     <div class="controls-bar">
       <button id="btn-back" class="ctrl-btn" aria-label="Voltar" title="Voltar">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
       </button>
@@ -56,7 +56,7 @@
   </div>
 
   <!-- Progress bar — always visible while reading -->
-  <div class="progress-track">
+  <div class="progress-track" role="progressbar" aria-label="Progresso de leitura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
     <div id="progress-bar" class="progress-bar"></div>
   </div>
 

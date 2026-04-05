@@ -6,6 +6,7 @@
   const reader = document.getElementById('reader');
   const content = document.getElementById('content');
   const controls = document.getElementById('controls');
+  const progressTrack = document.querySelector('.progress-track');
   const progressBar = document.getElementById('progress-bar');
   const openBtn = document.getElementById('open-btn');
   const fileInput = document.getElementById('file-input');
@@ -58,6 +59,14 @@
     }
     const rawHtml = marked.parse(text);
     content.innerHTML = DOMPurify.sanitize(rawHtml);
+
+    // Make external links open in a new tab so the reader isn't lost.
+    const externalLinks = content.querySelectorAll('a[href^="http"]');
+    for (let i = 0; i < externalLinks.length; i++) {
+      externalLinks[i].target = '_blank';
+      externalLinks[i].rel = 'noopener';
+    }
+
     welcome.classList.add('hidden');
     reader.classList.remove('hidden');
     document.body.classList.add('reading');
@@ -67,6 +76,10 @@
     applyLoadEffect();
     recalcDocHeight();
     updateProgress();
+    // Move focus into the article so keyboard/SR users start inside the
+    // new content, and flash the controls so they're discoverable.
+    content.focus({ preventScroll: true });
+    showControls();
   }
 
   // --- Load effect ---
@@ -140,6 +153,7 @@
   // --- Controls visibility ---
   function showControls() {
     controls.classList.add('visible');
+    controls.inert = false;
     controlsVisible = true;
     clearTimeout(controlsTimeout);
     controlsTimeout = setTimeout(hideControls, 3000);
@@ -147,12 +161,16 @@
 
   function hideControls() {
     controls.classList.remove('visible');
+    controls.inert = true;
     controlsVisible = false;
   }
 
-  // Show controls on click/tap in reader view
+  // Show controls on click/tap in reader view — but ignore the click when
+  // the user is just ending a text selection (mouseup after drag-select).
   reader.addEventListener('click', function (e) {
-    if (e.target.closest('a')) return; // don't interfere with links
+    if (e.target.closest('a, pre, code')) return;
+    const selection = window.getSelection && window.getSelection();
+    if (selection && selection.toString().length > 0) return;
     if (controlsVisible) {
       hideControls();
     } else {
@@ -182,6 +200,9 @@
     content.innerHTML = '';
     hideControls();
     fileInput.value = '';
+    // Return focus to the welcome open button so keyboard users land
+    // back where they were before opening the document.
+    openBtn.focus({ preventScroll: true });
   });
 
   // --- Themes ---
@@ -207,6 +228,7 @@
   function updateProgress() {
     const progress = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
     progressBar.style.width = progress + '%';
+    progressTrack.setAttribute('aria-valuenow', String(Math.round(progress)));
     progressTicking = false;
   }
 
