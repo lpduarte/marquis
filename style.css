@@ -71,6 +71,7 @@ body {
 
 /* ===== Welcome / Drop Zone ===== */
 .welcome {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -176,6 +177,32 @@ body {
 
 .welcome-msg.visible {
   opacity: 1;
+}
+
+.welcome .welcome-footer {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.welcome .welcome-footer:hover {
+  opacity: 0.9;
+}
+
+.welcome-footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.welcome-footer a:hover {
+  text-decoration: underline;
 }
 
 /* Drag-over visual feedback */

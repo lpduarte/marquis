@@ -104,7 +104,7 @@
   const touchQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
   welcome.addEventListener('click', function (e) {
     if (!touchQuery.matches) return;
-    if (e.target.closest('#open-btn')) return;
+    if (e.target.closest('#open-btn, a')) return;
     fileInput.click();
   });
 
