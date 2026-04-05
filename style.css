@@ -24,17 +24,12 @@ body {
   --bg: #fafafa;
   --text: #2b2b2b;
   --text-muted: #6b6b6b;
-  --accent: #4a4a4a;
   --code-bg: #f0f0f0;
   --border: #e0e0e0;
   --controls-bg: rgba(255, 255, 255, 0.92);
   --controls-shadow: rgba(0, 0, 0, 0.08);
-  --dot-active-ring: #2b2b2b;
   --progress-bg: #e0e0e0;
   --progress-fill: #b0b0b0;
-  --welcome-bg: #fafafa;
-  --btn-bg: #2b2b2b;
-  --btn-text: #fafafa;
   --blockquote-border: #d0d0d0;
   --link: #4a6fa5;
 }
@@ -44,17 +39,12 @@ body {
   --bg: #f5edda;
   --text: #3e3226;
   --text-muted: #7a6b5a;
-  --accent: #5c4a3a;
   --code-bg: #ebe3d0;
   --border: #d8cebc;
   --controls-bg: rgba(245, 237, 218, 0.92);
   --controls-shadow: rgba(0, 0, 0, 0.08);
-  --dot-active-ring: #3e3226;
   --progress-bg: #d8cebc;
   --progress-fill: #b8a890;
-  --welcome-bg: #f5edda;
-  --btn-bg: #3e3226;
-  --btn-text: #f5edda;
   --blockquote-border: #c8bea8;
   --link: #7a5c3a;
 }
@@ -64,17 +54,12 @@ body {
   --bg: #1a1a1a;
   --text: #d4d4d4;
   --text-muted: #808080;
-  --accent: #a0a0a0;
   --code-bg: #252525;
   --border: #333333;
   --controls-bg: rgba(30, 30, 30, 0.92);
   --controls-shadow: rgba(0, 0, 0, 0.3);
-  --dot-active-ring: #d4d4d4;
   --progress-bg: #333333;
   --progress-fill: #555555;
-  --welcome-bg: #1a1a1a;
-  --btn-bg: #d4d4d4;
-  --btn-text: #1a1a1a;
   --blockquote-border: #444444;
   --link: #7aa2d4;
 }
@@ -91,7 +76,6 @@ body {
   justify-content: center;
   min-height: 100vh;
   padding: 2rem;
-  background-color: var(--welcome-bg);
 }
 
 .welcome-content {
@@ -168,7 +152,6 @@ body {
   .only-pointer { display: none; }
   .only-touch { display: inline; }
   .link-btn { text-decoration: none; }
-  .welcome { cursor: pointer; }
 }
 
 .welcome-msg {
@@ -336,7 +319,7 @@ body {
   .welcome-msg,
   .theme-dot,
   .ctrl-btn,
-  .open-btn {
+  .link-btn {
     transition: none;
   }
   .content.fx-load,
@@ -419,8 +402,8 @@ body {
 .dot-dark { background-color: #1a1a1a; border-color: #555; }
 
 .theme-btn[data-theme].active .theme-dot {
-  border-color: var(--dot-active-ring);
-  box-shadow: 0 0 0 2px var(--dot-active-ring);
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px var(--text);
 }
 
 /* Progress bar */
