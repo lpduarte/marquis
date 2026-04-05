@@ -17,6 +17,8 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Safety net: no single element should ever create horizontal scroll */
+  overflow-x: hidden;
 }
 
 /* ===== Theme: Light ===== */
@@ -219,6 +221,8 @@ body {
 /* ===== Content Typography ===== */
 .content {
   font-size: 1.15rem;
+  /* Long words (URLs, hashes) break at character boundaries if needed */
+  overflow-wrap: break-word;
 }
 
 .content h1, .content h2, .content h3,
@@ -277,6 +281,8 @@ body {
   background: var(--code-bg);
   padding: 0.15em 0.4em;
   border-radius: 4px;
+  /* File paths and identifiers break anywhere rather than overflow */
+  overflow-wrap: anywhere;
 }
 
 .content pre {
@@ -284,6 +290,7 @@ body {
   padding: 1.2em;
   border-radius: 8px;
   overflow-x: auto;
+  max-width: 100%;
   margin-bottom: 1.5em;
   line-height: 1.5;
 }
