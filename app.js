@@ -60,6 +60,7 @@
     content.innerHTML = DOMPurify.sanitize(rawHtml);
     welcome.classList.add('hidden');
     reader.classList.remove('hidden');
+    document.body.classList.add('reading');
     // Instant scroll — bypass the global `scroll-behavior: smooth` so the
     // fade-up animation isn't fighting a smooth scroll when switching docs.
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -177,6 +178,7 @@
   btnBack.addEventListener('click', function () {
     reader.classList.add('hidden');
     welcome.classList.remove('hidden');
+    document.body.classList.remove('reading');
     content.innerHTML = '';
     hideControls();
     fileInput.value = '';

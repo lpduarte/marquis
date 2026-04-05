@@ -343,15 +343,15 @@ body {
 /* ===== Floating Controls ===== */
 .controls {
   position: fixed;
-  bottom: 0;
+  bottom: 2px; /* sits just above the always-visible 2px progress track */
   left: 0;
   right: 0;
-  padding: 0.6rem 1rem 0;
+  padding: 0.6rem 1rem;
   background: var(--controls-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 -1px 12px var(--controls-shadow);
-  transform: translateY(100%);
+  transform: translateY(calc(100% + 2px));
   transition: transform 0.3s ease, opacity 0.3s ease;
   opacity: 0;
   z-index: 100;
@@ -367,7 +367,6 @@ body {
   align-items: center;
   justify-content: center;
   gap: 1.2rem;
-  padding-bottom: 0.5rem;
 }
 
 .ctrl-btn {
@@ -416,10 +415,20 @@ body {
   box-shadow: 0 0 0 2px var(--text);
 }
 
-/* Progress bar */
+/* Progress bar — fixed at viewport bottom, visible only while reading */
 .progress-track {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   height: 2px;
   background: var(--progress-bg);
+  z-index: 100;
+  display: none;
+}
+
+body.reading .progress-track {
+  display: block;
 }
 
 .progress-bar {
