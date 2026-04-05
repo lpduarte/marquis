@@ -115,11 +115,12 @@ body {
   position: absolute;
   left: 50%;
   bottom: 100%;
-  transform: translateX(-50%);
-  width: 0.78em;
+  /* shift left by half the letter-spacing to center over the M glyph */
+  transform: translateX(calc(-50% - 0.04em));
+  width: 1.35em;
   height: auto;
   fill: currentColor;
-  margin-bottom: 0.12em;
+  margin-bottom: -0.18em;
 }
 
 .welcome p {
