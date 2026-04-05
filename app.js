@@ -10,16 +10,10 @@
   const openBtn = document.getElementById('open-btn');
   const fileInput = document.getElementById('file-input');
   const btnBack = document.getElementById('btn-back');
-  const btnFontDown = document.getElementById('btn-font-down');
-  const btnFontUp = document.getElementById('btn-font-up');
   const themeButtons = document.querySelectorAll('.theme-btn');
   const welcomeMsg = document.getElementById('welcome-msg');
 
   // --- State ---
-  const FONT_STEP = 0.05;
-  const FONT_MIN = 0.85;
-  const FONT_MAX = 1.6;
-  let fontSize = parseFloat(localStorage.getItem('marquis-font-size')) || 1.15;
   let controlsTimeout = null;
   let controlsVisible = false;
   let docHeight = 0;
@@ -30,7 +24,6 @@
 
   // --- Init ---
   applyTheme(localStorage.getItem('marquis-theme') || 'light');
-  applyFontSize(fontSize);
 
   // --- Welcome messages (errors, warnings) ---
   function showMessage(text) {
@@ -187,21 +180,6 @@
     content.innerHTML = '';
     hideControls();
     fileInput.value = '';
-  });
-
-  // --- Font size ---
-  function applyFontSize(size) {
-    fontSize = Math.max(FONT_MIN, Math.min(FONT_MAX, size));
-    document.documentElement.style.setProperty('--font-size', fontSize + 'rem');
-    localStorage.setItem('marquis-font-size', fontSize);
-  }
-
-  btnFontDown.addEventListener('click', function () {
-    applyFontSize(fontSize - FONT_STEP);
-  });
-
-  btnFontUp.addEventListener('click', function () {
-    applyFontSize(fontSize + FONT_STEP);
   });
 
   // --- Themes ---
