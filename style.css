@@ -159,6 +159,25 @@ body {
   opacity: 0.85;
 }
 
+.open-btn:focus-visible,
+.ctrl-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.welcome-msg {
+  min-height: 1.4em;
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.welcome-msg.visible {
+  opacity: 1;
+}
+
 /* Drag-over visual feedback */
 .welcome.drag-over {
   background-color: var(--code-bg);
@@ -302,6 +321,18 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  body,
+  .controls,
+  .progress-bar,
+  .welcome-msg,
+  .theme-dot,
+  .ctrl-btn,
+  .open-btn {
+    transition: none;
+  }
   .content.fx-load,
   .content.fx-load > .fx-item {
     animation: none;

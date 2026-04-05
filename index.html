@@ -20,6 +20,7 @@
       <p class="welcome-or">ou</p>
       <button id="open-btn" class="open-btn">Abre um ficheiro</button>
       <input type="file" id="file-input" accept=".md,.markdown,.txt" hidden>
+      <p id="welcome-msg" class="welcome-msg" role="status" aria-live="polite"></p>
     </div>
   </div>
 
@@ -31,25 +32,25 @@
   <!-- Floating controls (hidden until tap/click) -->
   <div id="controls" class="controls">
     <div class="controls-bar">
-      <button id="btn-back" class="ctrl-btn" title="Voltar">
+      <button id="btn-back" class="ctrl-btn" aria-label="Voltar" title="Voltar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
       </button>
 
       <div class="ctrl-group">
-        <button id="btn-font-down" class="ctrl-btn" title="Diminuir fonte">A-</button>
-        <button id="btn-font-up" class="ctrl-btn" title="Aumentar fonte">A+</button>
+        <button id="btn-font-down" class="ctrl-btn" aria-label="Diminuir fonte" title="Diminuir fonte">A-</button>
+        <button id="btn-font-up" class="ctrl-btn" aria-label="Aumentar fonte" title="Aumentar fonte">A+</button>
       </div>
 
       <div class="ctrl-group">
-        <button class="ctrl-btn theme-btn" data-theme="light" title="Claro">
+        <button class="ctrl-btn theme-btn" data-theme="light" aria-label="Tema claro" title="Claro">
           <span class="theme-dot dot-light"></span>
         </button>
-        <button class="ctrl-btn theme-btn" data-theme="sepia" title="Sépia">
+        <button class="ctrl-btn theme-btn" data-theme="sepia" aria-label="Tema sépia" title="Sépia">
           <span class="theme-dot dot-sepia"></span>
         </button>
-        <button class="ctrl-btn theme-btn" data-theme="dark" title="Escuro">
+        <button class="ctrl-btn theme-btn" data-theme="dark" aria-label="Tema escuro" title="Escuro">
           <span class="theme-dot dot-dark"></span>
         </button>
       </div>

@@ -13,31 +13,63 @@
   const btnFontDown = document.getElementById('btn-font-down');
   const btnFontUp = document.getElementById('btn-font-up');
   const themeButtons = document.querySelectorAll('.theme-btn');
+  const welcomeMsg = document.getElementById('welcome-msg');
 
   // --- State ---
   const FONT_STEP = 0.05;
   const FONT_MIN = 0.85;
   const FONT_MAX = 1.6;
   let fontSize = parseFloat(localStorage.getItem('marquis-font-size')) || 1.15;
-  let currentTheme = localStorage.getItem('marquis-theme') || 'light';
   let controlsTimeout = null;
   let controlsVisible = false;
   let docHeight = 0;
   let progressTicking = false;
+  let messageTimeout = null;
 
   const FX_STAGGER_COUNT = 20;
 
   // --- Init ---
-  applyTheme(currentTheme);
+  applyTheme(localStorage.getItem('marquis-theme') || 'light');
   applyFontSize(fontSize);
+
+  // --- Welcome messages (errors, warnings) ---
+  function showMessage(text) {
+    welcomeMsg.textContent = text;
+    welcomeMsg.classList.add('visible');
+    clearTimeout(messageTimeout);
+    messageTimeout = setTimeout(function () {
+      welcomeMsg.classList.remove('visible');
+    }, 4500);
+  }
+
+  // Heuristic: treat content as binary if it has null bytes or a high ratio
+  // of non-printable chars in the first 1KB. Guards against users dropping
+  // an image/PDF renamed to .md.
+  function looksBinary(text) {
+    const sample = text.slice(0, 1024);
+    if (!sample.length) return false;
+    let nonPrintable = 0;
+    for (let i = 0; i < sample.length; i++) {
+      const c = sample.charCodeAt(i);
+      if (c === 0) return true;
+      if (c < 9 || (c > 13 && c < 32)) nonPrintable++;
+    }
+    return nonPrintable / sample.length > 0.1;
+  }
 
   // --- Markdown rendering ---
   function renderMarkdown(text) {
+    if (looksBinary(text)) {
+      showMessage('Este ficheiro não parece ser texto.');
+      return;
+    }
     const rawHtml = marked.parse(text);
     content.innerHTML = DOMPurify.sanitize(rawHtml);
     welcome.classList.add('hidden');
     reader.classList.remove('hidden');
-    window.scrollTo(0, 0);
+    // Instant scroll — bypass the global `scroll-behavior: smooth` so the
+    // fade-up animation isn't fighting a smooth scroll when switching docs.
+    window.scrollTo({ top: 0, behavior: 'instant' });
     applyLoadEffect();
     recalcDocHeight();
     updateProgress();
@@ -93,10 +125,12 @@
   document.addEventListener('drop', function (e) {
     e.preventDefault();
     welcome.classList.remove('drag-over');
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      readFile(files[0]);
+    const files = e.dataTransfer && e.dataTransfer.files;
+    if (!files || files.length === 0) return;
+    if (files.length > 1) {
+      showMessage('Só abro um ficheiro de cada vez — vou usar o primeiro.');
     }
+    readFile(files[0]);
   });
 
   // --- Controls visibility ---
@@ -162,7 +196,6 @@
 
   // --- Themes ---
   function applyTheme(theme) {
-    currentTheme = theme;
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('marquis-theme', theme);
     themeButtons.forEach(function (btn) {
