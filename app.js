@@ -324,7 +324,7 @@
   // --- Service worker (offline + installable) ---
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('sw.js').catch(function () { /* no-op */ });
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(function () { /* no-op */ });
     });
   }
 })();
