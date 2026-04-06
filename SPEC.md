@@ -109,12 +109,34 @@ These were considered and rejected. Do not reopen without a compelling case.
 - **Open source link at the footer** — uses the words "open source →" in lowercase, muted, bottom-anchored. Part colophon, part signal of trust ("the code is there, go check").
 - **Progress bar outside the controls toolbar.** Always visible during reading, independent of whether the controls are expanded.
 
+## v2 direction (not scheduled)
+
+**Question**: *"How do I make Marquis useful for more people beyond myself?"*
+
+Decided 2026-04-06. Not started, not scheduled. Revisit when there's energy and a reason.
+
+Candidate features (to be triaged at the start of v2, not pre-approved):
+- i18n (English + Portuguese at minimum)
+- Open markdown via URL parameter (`?url=...`)
+- Syntax highlighting for code blocks
+- Reading time estimate
+- Self-host Literata (eliminate the last external dependency)
+- Print stylesheet
+
+Features explicitly still rejected (do not reopen):
+- Editing, sync, accounts, analytics
+- Multiple file tabs
+- Reading position / bookmarks
+- Table of contents sidebar
+
 ## How v2 should begin
 
 Before writing any code for v2:
 
 1. Read [`POSTMORTEM.md`](./POSTMORTEM.md).
-2. Decide the v2 *question* — what problem is v2 solving that v1 did not? If there isn't a clear answer, there is no v2.
-3. Update this file with a new `## v2` section mirroring the structure above: core, identity, infrastructure, accessibility, stack. List what v2 adds and what v2 *removes* from v1 (if anything).
-4. Update `CHANGELOG.md` with a new entry.
-5. Only then, start writing code.
+2. Confirm the v2 question above still holds. If it doesn't, rewrite it before proceeding.
+3. Triage the candidate features: what's in, what's out, what's deferred to v3.
+4. Update this file with a `## v2 — shipped` section. List what v2 adds and what it removes.
+5. Update `CHANGELOG.md` with a new entry.
+6. Set up a local dev server before writing any code.
+7. Only then, start.
