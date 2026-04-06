@@ -5,6 +5,34 @@ All notable changes to Marquis will be documented in this file.
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-04-06
+
+Reliability and simplification pass. Driven by real bugs found during mobile testing.
+
+### Added
+- **Error handling** with friendly Portuguese messages and diagnostic codes (MQ-F00–F04, MQ-P01, MQ-S01, MQ-R00). Errors show a human message with a suggested action, plus a small footnote code for debugging. Technical details go to `console.error`.
+- **Loading indicator** — animated dots ("A processar...") shown via `showLoading` before the synchronous `marked.parse` runs. Visible only if the parse is slow enough for the browser to paint a frame; invisible on fast files.
+- **`overflow-wrap: break-word`** on `.content` and `overflow-wrap: anywhere` on `.content code` — prevents long file paths and identifiers from causing horizontal overflow on mobile.
+- **`max-width: 100%`** on `.content pre` — keeps fenced code blocks contained.
+- **`body { overflow-x: hidden }`** as a safety net against any residual horizontal scroll.
+
+### Changed
+- **Service worker rewritten from scratch** — network-first for all same-origin requests (was cache-first). Deploys are now immediately visible without manual cache bumps. Offline falls back to cache. ~35 lines instead of ~60.
+- **`marked` and `DOMPurify` self-hosted** in the repo instead of loaded from jsdelivr CDN. Eliminates CDN dependency, SRI hash maintenance, opaque responses (~21 MB phantom quota), and cross-origin caching complexity. Total: 57 KB added to the repo.
+- **Programmatic focus outline suppressed** on `.content:focus` — the A5 accessibility fix moved focus into the article on render, which triggered iOS Safari's blue system accent ring. Now hidden via `outline: none` (safe because the article has `tabindex="-1"` and is unreachable via keyboard Tab).
+
+### Removed
+- CDN `<script>` tags with `integrity` and `crossorigin` attributes for marked and DOMPurify.
+- Runtime caching of arbitrary external URLs in the service worker.
+- `mode: 'no-cors'` fetch in the service worker install.
+
+### Fixed
+- Stale service worker cache causing deployed changes to be invisible to returning visitors. Root cause: cache-first strategy + no CACHE bump on deploy. Fixed by switching to network-first.
+- Horizontal overflow on mobile when reading documents with long inline code (e.g., file paths). The postmortem's `/Library/Developer/CommandLineTools/usr/bin/xcrun` path was the culprit.
+- iOS Safari intermittently showing a blue focus ring around the article body on file open.
+
+---
+
 ## [1.0.0] — 2026-04-05
 
 First public release. Live at [lpduarte.github.io/marquis](https://lpduarte.github.io/marquis/).

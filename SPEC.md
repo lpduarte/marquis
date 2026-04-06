@@ -65,10 +65,10 @@ These are invariants. Any change that violates one of these is out of scope rega
 
 ### Stack
 - HTML + CSS + vanilla JavaScript (no framework, no bundler)
-- `marked@12.0.2` — markdown parser
-- `DOMPurify@3.1.6` — HTML sanitizer
-- `Literata` via Google Fonts — reading typeface
-- Both CDN scripts pinned to exact versions with SRI integrity hashes
+- `marked@12.0.2` — markdown parser (self-hosted, no CDN)
+- `DOMPurify@3.1.6` — HTML sanitizer (self-hosted, no CDN)
+- `Literata` via Google Fonts — reading typeface (only remaining external dependency; local serif fallbacks if offline)
+- Service worker: network-first for all same-origin requests, cache fallback for offline only
 
 ## v1 — explicitly NOT included
 
@@ -89,13 +89,17 @@ These were considered and rejected. Do not reopen without a compelling case.
 - **Table of contents sidebar.** Too much UI for the minimalist brief.
 
 ### Deferred (maybe v2)
-- **Error handling for `FileReader` / parser failures.** Silent failure today.
-- **Loading state for large files.** `marked.parse` is synchronous and can block.
-- **Network-first service worker strategy for HTML.** Currently cache-first, makes deploys invisible until hard refresh.
-- **Local hosting of `marked` and `DOMPurify`.** Would eliminate CDN dependency but add repo weight and manual updates.
 - **i18n.** Strings are currently hardcoded in Portuguese.
-- **Changelog automation / release tagging.** Manual for v1.
-- **CI / linting / automated tests.** None in v1.
+- **Changelog automation / release tagging.** Manual.
+- **CI / linting / automated tests.** None.
+
+### Shipped post-v1.0.0 (v1.1.0)
+- **Error handling for `FileReader` / parser failures.** Friendly messages with error codes (MQ-F00–F04, MQ-P01, MQ-S01, MQ-R00). Loading indicator with animated dots.
+- **Loading state for large files.** `showLoading` with rAF yield before sync parse.
+- **Network-first service worker.** Eliminates deploy staleness by design.
+- **Self-hosted `marked` and `DOMPurify`.** Zero CDN dependencies at runtime. No SRI maintenance.
+- **Horizontal overflow prevention.** `overflow-wrap` rules for prose and inline code on mobile.
+- **Programmatic focus outline suppressed.** iOS Safari blue ring no longer flashes on render.
 
 ## Design decisions worth remembering
 
