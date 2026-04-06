@@ -174,10 +174,36 @@ body {
   color: var(--text-muted);
   opacity: 0;
   transition: opacity 0.3s ease;
+  text-align: center;
 }
 
 .welcome-msg.visible {
   opacity: 1;
+}
+
+.msg-code {
+  display: none;
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.msg-code:not(:empty) {
+  display: block;
+}
+
+/* Loading dots — cycling ::after on the msg-text span */
+.welcome-msg.loading .msg-text::after {
+  content: '';
+  animation: marquis-dots 1.2s steps(4, end) infinite;
+}
+
+@keyframes marquis-dots {
+  0%  { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
 }
 
 .welcome .welcome-footer {

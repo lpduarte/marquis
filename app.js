@@ -13,6 +13,8 @@
   const btnBack = document.getElementById('btn-back');
   const themeButtons = document.querySelectorAll('.theme-btn');
   const welcomeMsg = document.getElementById('welcome-msg');
+  const msgText = welcomeMsg.querySelector('.msg-text');
+  const msgCode = welcomeMsg.querySelector('.msg-code');
 
   // --- State ---
   let controlsTimeout = null;
@@ -26,14 +28,59 @@
   // --- Init ---
   applyTheme(localStorage.getItem('marquis-theme') || 'light');
 
-  // --- Welcome messages (errors, warnings) ---
-  function showMessage(text) {
-    welcomeMsg.textContent = text;
+  // --- Welcome messages (errors, warnings, loading) ---
+  function showMessage(text, code) {
+    msgText.textContent = text;
+    msgCode.textContent = code || '';
+    welcomeMsg.classList.remove('loading');
     welcomeMsg.classList.add('visible');
     clearTimeout(messageTimeout);
-    messageTimeout = setTimeout(function () {
-      welcomeMsg.classList.remove('visible');
-    }, 4500);
+    messageTimeout = setTimeout(hideMessage, 4500);
+  }
+
+  function showLoading(text) {
+    msgText.textContent = text;
+    msgCode.textContent = '';
+    welcomeMsg.classList.add('loading', 'visible');
+    clearTimeout(messageTimeout);
+  }
+
+  function hideMessage() {
+    welcomeMsg.classList.remove('visible', 'loading');
+    clearTimeout(messageTimeout);
+  }
+
+  // --- Error mappers ---
+  function friendlyFileError(error) {
+    if (!error) return { text: 'Não foi possível ler o ficheiro. Tenta com outro.', code: 'MQ-F00' };
+    switch (error.name) {
+      case 'NotFoundError':
+        return { text: 'O ficheiro parece ter sido movido ou apagado. Escolhe outro.', code: 'MQ-F01' };
+      case 'NotReadableError':
+        return { text: 'Não foi possível ler este ficheiro. Pode ser uma questão de permissões.', code: 'MQ-F02' };
+      case 'SecurityError':
+        return { text: 'O browser bloqueou o acesso a este ficheiro por segurança.', code: 'MQ-F03' };
+      case 'AbortError':
+        return { text: 'A leitura foi interrompida. Tenta outra vez.', code: 'MQ-F04' };
+      default:
+        return { text: 'Não foi possível ler o ficheiro. Tenta com outro.', code: 'MQ-F00' };
+    }
+  }
+
+  function friendlyRenderError(error) {
+    var msg = 'Não foi possível processar este ficheiro. Tenta com outro.';
+    var code = 'MQ-R00';
+    if (error && error.message) {
+      if (error.message.toLowerCase().indexOf('purify') !== -1 ||
+          error.message.toLowerCase().indexOf('sanitize') !== -1) {
+        msg = 'Houve um problema ao preparar o conteúdo. Tenta com outro ficheiro.';
+        code = 'MQ-S01';
+      } else {
+        msg = 'O conteúdo não pôde ser processado. O ficheiro pode não ser markdown válido.';
+        code = 'MQ-P01';
+      }
+    }
+    return { text: msg, code: code };
   }
 
   // Heuristic: treat content as binary if it has null bytes or a high ratio
@@ -54,32 +101,48 @@
   // --- Markdown rendering ---
   function renderMarkdown(text) {
     if (looksBinary(text)) {
-      showMessage('Este ficheiro não parece ser texto.');
+      showMessage('Este ficheiro não parece ser texto.', 'MQ-F00');
       return;
     }
-    const rawHtml = marked.parse(text);
-    content.innerHTML = DOMPurify.sanitize(rawHtml);
 
-    // Make external links open in a new tab so the reader isn't lost.
-    const externalLinks = content.querySelectorAll('a[href^="http"]');
-    for (let i = 0; i < externalLinks.length; i++) {
-      externalLinks[i].target = '_blank';
-      externalLinks[i].rel = 'noopener';
-    }
+    // Show a "processing" hint with animated dots. For fast files the
+    // browser paints it for one frame and immediately switches to reader.
+    // For slow files the user sees it until the sync parse completes.
+    showLoading('A processar');
 
-    welcome.classList.add('hidden');
-    reader.classList.remove('hidden');
-    document.body.classList.add('reading');
-    // Instant scroll — bypass the global `scroll-behavior: smooth` so the
-    // fade-up animation isn't fighting a smooth scroll when switching docs.
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    applyLoadEffect();
-    recalcDocHeight();
-    updateProgress();
-    // Move focus into the article so keyboard/SR users start inside the
-    // new content, and flash the controls so they're discoverable.
-    content.focus({ preventScroll: true });
-    showControls();
+    // Yield to the browser so the loading message can paint before the
+    // synchronous marked.parse potentially blocks the thread.
+    requestAnimationFrame(function () {
+      try {
+        var rawHtml = marked.parse(text);
+        var cleanHtml = DOMPurify.sanitize(rawHtml);
+      } catch (err) {
+        var mapped = friendlyRenderError(err);
+        console.error(mapped.code + ':', err);
+        showMessage(mapped.text, mapped.code);
+        return;
+      }
+
+      content.innerHTML = cleanHtml;
+
+      // Make external links open in a new tab so the reader isn't lost.
+      var externalLinks = content.querySelectorAll('a[href^="http"]');
+      for (var i = 0; i < externalLinks.length; i++) {
+        externalLinks[i].target = '_blank';
+        externalLinks[i].rel = 'noopener';
+      }
+
+      hideMessage();
+      welcome.classList.add('hidden');
+      reader.classList.remove('hidden');
+      document.body.classList.add('reading');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      applyLoadEffect();
+      recalcDocHeight();
+      updateProgress();
+      content.focus({ preventScroll: true });
+      showControls();
+    });
   }
 
   // --- Load effect ---
@@ -102,6 +165,11 @@
     const fr = new FileReader();
     fr.onload = function (e) {
       renderMarkdown(e.target.result);
+    };
+    fr.onerror = function () {
+      var mapped = friendlyFileError(fr.error);
+      console.error(mapped.code + ':', fr.error);
+      showMessage(mapped.text, mapped.code);
     };
     fr.readAsText(file);
   }
