@@ -34,6 +34,7 @@ body {
   --progress-fill: #b0b0b0;
   --blockquote-border: #d0d0d0;
   --link: #4a6fa5;
+  --dialog-bg: rgba(250, 250, 250, 0.5);
 }
 
 /* ===== Theme: Sepia ===== */
@@ -49,6 +50,7 @@ body {
   --progress-fill: #b8a890;
   --blockquote-border: #c8bea8;
   --link: #7a5c3a;
+  --dialog-bg: rgba(245, 237, 218, 0.5);
 }
 
 /* ===== Theme: Dark ===== */
@@ -64,6 +66,7 @@ body {
   --progress-fill: #555555;
   --blockquote-border: #444444;
   --link: #7aa2d4;
+  --dialog-bg: rgba(26, 26, 26, 0.5);
 }
 
 body {
@@ -226,6 +229,71 @@ body {
 .welcome-footer a:hover {
   color: var(--text);
   text-decoration: underline;
+}
+
+/* ===== Confirmation dialog ===== */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dialog-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+}
+
+.dialog-overlay.hidden {
+  display: none;
+}
+
+.dialog-content {
+  text-align: center;
+}
+
+.dialog-q {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 1.2rem;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.dialog-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0.3rem 0.2rem;
+}
+
+.dialog-btn:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.dialog-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.dialog-secondary {
+  color: var(--text-muted);
+}
+
+.dialog-primary {
+  color: var(--text);
+  font-weight: 600;
 }
 
 /* Drag-over visual feedback */

@@ -13,6 +13,9 @@
   const btnBack = document.getElementById('btn-back');
   const themeButtons = document.querySelectorAll('.theme-btn');
   const welcomeMsg = document.getElementById('welcome-msg');
+  const dialog = document.getElementById('dialog');
+  const dialogConfirm = document.getElementById('dialog-confirm');
+  const dialogCancel = document.getElementById('dialog-cancel');
   const msgText = welcomeMsg.querySelector('.msg-text');
   const msgCode = welcomeMsg.querySelector('.msg-code');
 
@@ -22,6 +25,7 @@
   let docHeight = 0;
   let progressTicking = false;
   let messageTimeout = null;
+  let pendingPasteText = null;
 
   const FX_STAGGER_COUNT = 20;
 
@@ -313,11 +317,66 @@
     onScroll();
   }, { passive: true });
 
+  // --- Paste ---
+  document.addEventListener('paste', function (e) {
+    // Ignore paste on touch devices (no keyboard shortcut for paste)
+    if (touchQuery.matches) return;
+
+    var text = e.clipboardData && e.clipboardData.getData('text/plain');
+    if (!text || !text.trim()) return;
+
+    // On welcome: render directly
+    if (!welcome.classList.contains('hidden')) {
+      renderMarkdown(text);
+      return;
+    }
+
+    // On reader: ask before replacing
+    if (!reader.classList.contains('hidden')) {
+      pendingPasteText = text;
+      showDialog();
+    }
+  });
+
+  // --- Confirmation dialog ---
+  function showDialog() {
+    dialog.classList.remove('hidden');
+    reader.inert = true;
+    dialogConfirm.focus();
+  }
+
+  function hideDialog() {
+    dialog.classList.add('hidden');
+    reader.inert = false;
+    pendingPasteText = null;
+  }
+
+  dialogConfirm.addEventListener('click', function () {
+    var text = pendingPasteText;
+    hideDialog();
+    if (text) renderMarkdown(text);
+  });
+
+  dialogCancel.addEventListener('click', function () {
+    hideDialog();
+  });
+
+  // Clicking the overlay (outside the dialog content) dismisses
+  dialog.addEventListener('click', function (e) {
+    if (e.target === dialog) hideDialog();
+  });
+
   // --- Keyboard shortcuts ---
   document.addEventListener('keydown', function (e) {
-    // Escape: go back
-    if (e.key === 'Escape' && !reader.classList.contains('hidden')) {
-      btnBack.click();
+    if (e.key === 'Escape') {
+      // Dialog takes priority over reader back
+      if (!dialog.classList.contains('hidden')) {
+        hideDialog();
+        return;
+      }
+      if (!reader.classList.contains('hidden')) {
+        btnBack.click();
+      }
     }
   });
 

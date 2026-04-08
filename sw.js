@@ -1,4 +1,4 @@
-var CACHE = 'marquis-v4';
+var CACHE = 'marquis-v5';
 var ASSETS = [
   './',
   './index.html',
